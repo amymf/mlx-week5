@@ -61,6 +61,6 @@ for epoch in range(num_epochs):
     wandb.log({"val_loss": val_loss, "val_acc": val_acc})
     print(f"Epoch [{epoch+1}/{num_epochs}], Val Loss: {val_loss:.4f}, Val Acc: {val_acc:.4f}")
 
-torch.save(model.state_dict(), "cnn.pth")
+torch.save(model.state_dict(), "models/cnn.pth")
 wandb.save("cnn.pth")
-print("Model saved as cnn.pth")
+print("Model saved as models/cnn.pth")
