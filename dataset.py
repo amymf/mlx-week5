@@ -13,6 +13,7 @@ class UrbanSoundDataset(Dataset):
         self.dataset_path = dataset_path
         self.sr = sr
         self.n_mels = n_mels
+        self.duration = duration
         self.samples = int(sr * duration)
 
     def __len__(self):
@@ -33,13 +34,13 @@ class UrbanSoundDataset(Dataset):
             y = y[: self.samples]
 
         # Compute mel spectrogram
-        mel = librosa.feature.melspectrogram(y=y, sr=self.sr, n_mels=self.n_mels)
+        mel = librosa.feature.melspectrogram(
+            y=y, sr=self.sr, n_mels=self.n_mels
+        )  # (128, num_frames)
         mel_db = librosa.power_to_db(mel)
         # Normalize, convert to tensor and resize
         mel_db = (mel_db - mel_db.min()) / (mel_db.max() - mel_db.min())
-        mel_tensor = (
-            torch.tensor(mel_db).unsqueeze(0).float()
-        )  # (1, 128, num_frames) where num_frames = sr * duration / hop_length ~ 172
+        mel_tensor = torch.tensor(mel_db).unsqueeze(0).float()  # (1, 128, num_frames)
 
         label = torch.tensor(row.classID).long()
         return mel_tensor, label
