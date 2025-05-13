@@ -39,15 +39,7 @@ class UrbanSoundDataset(Dataset):
         mel_db = (mel_db - mel_db.min()) / (mel_db.max() - mel_db.min())
         mel_tensor = (
             torch.tensor(mel_db).unsqueeze(0).float()
-        )  # (1, 128, num_frames) where num_frames = sr * duration / hop_length
-        mel_resized = F.interpolate(
-            mel_tensor.unsqueeze(0),
-            size=(self.n_mels, self.n_mels),
-            mode="bilinear",
-            align_corners=False,
-        ).squeeze(
-            0
-        )  # (1, 128, 128)
+        )  # (1, 128, num_frames) where num_frames = sr * duration / hop_length ~ 172
 
         label = torch.tensor(row.classID).long()
-        return mel_resized, label
+        return mel_tensor, label

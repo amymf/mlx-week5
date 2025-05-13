@@ -18,25 +18,25 @@ class UrbanSoundCNN(nn.Module):
 
         self.pool = nn.MaxPool2d(kernel_size=2, stride=2, padding=0)
 
-        self.fc1 = nn.Linear(128 * 16 * 16, 512)
+        self.fc1 = nn.Linear(128 * 16 * 21, 512)
         self.bn4 = nn.BatchNorm1d(512)
         self.dropout4 = nn.Dropout(0.3)
 
         self.fc2 = nn.Linear(512, num_classes)
 
     def forward(self, x):
-        # x shape (batch_size, 1, 128, 128)
+        # x shape (batch_size, 1, 128, 172)
         x = self.pool(F.relu(self.bn1(self.conv1(x))))  # Conv1 -> BatchNorm -> ReLU -> Pool
         x = self.dropout1(x)
-        # x shape (batch_size, 32, 64, 64)
+        # x shape (batch_size, 32, 64, 86)
         x = self.pool(F.relu(self.bn2(self.conv2(x)))) # Conv2 -> BatchNorm -> ReLU -> Pool
         x = self.dropout2(x)
-        # x shape (batch_size, 64, 32, 32)
+        # x shape (batch_size, 64, 32, 42)
         x = self.pool(F.relu(self.bn3(self.conv3(x)))) # Conv3 -> BatchNorm -> ReLU -> Pool
         x = self.dropout3(x)
-        # x shape (batch_size, 128, 16, 16)
-        x = x.view(-1, 128 * 16 * 16)  # Flatten the tensor
-        # x shape (batch_size, 32768)
+        # x shape (batch_size, 128, 16, 21)
+        x = x.view(-1, 128*16*21)  # Flatten the tensor
+        # x shape (batch_size, 43008)
         x = F.relu(self.bn4(self.fc1(x))) # FC1 -> BatchNorm -> ReLU
         x = self.dropout4(x)
         x = self.fc2(x)

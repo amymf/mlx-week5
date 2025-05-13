@@ -20,10 +20,6 @@ model = CNN().to(device)
 optimizer = optim.Adam(model.parameters(), lr=0.001)
 criterion = torch.nn.CrossEntropyLoss()
 num_epochs = 10
-train_loss = 0.0
-val_loss = 0.0
-train_acc = 0.0
-val_acc = 0.0
 
 for epoch in range(num_epochs):
     model.train()
@@ -43,6 +39,8 @@ for epoch in range(num_epochs):
     train_loss /= len(train_dataloader)
     train_acc /= len(train_dataset)
 
+    val_loss = 0.0
+    val_acc = 0.0
     model.eval()
     for i, (mel, label) in enumerate(tqdm(val_dataloader)):
         mel = mel.to(device)
